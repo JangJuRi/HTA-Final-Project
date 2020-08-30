@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sample.dao.AlramDao">
+	<insert id="insertAlram" parameterType="Alram">
+		<selectKey keyProperty="alramNo" resultType="long" order="BEFORE">
+			select alram_seq.nextval from dual
+		</selectKey>
+		insert into moim_alram
+		(alram_no,message,type,user_id,login_user_id)
+		values
+		(#{alramNo},#{message},#{type},#{userId},#{loginUserId})
+		
+	</insert>
+	
+	<insert id="insertMessage" parameterType="Message">
+		<selectKey keyProperty="messageNo" resultType="long" order="BEFORE">
+			select message_seq.nextval from dual
+		</selectKey>
+		insert into moim_message
+		(message_no, title, content, send_user, receive_user, user_id)
+		values
+		(#{messageNo}, #{title}, #{content}, #{sendUser}, #{receiveUser}, #{userId})
+	</insert>
+	
+	<update id="deleteAlram" parameterType="long">
+		delete from moim_alram
+		where
+			alram_no = #{value}
+	</update>
+	
+	<select id="selectAlrams" parameterType="string" resultType="Alram">
+	<![CDATA[
+		select * from (
+		    select
+		            alram_no        as alramNo,
+		            message         as message,
+		            type            as type,
+		            read_yn         as readYn,
+		            user_id         as userId,
+		            login_user_id   as loginUserId,
+		            created_date    as createdDate
+		            from
+		                moim_alram
+		            where
+		                user_id = #{value}
+		            and
+		                read_yn = 'N'
+		            order by
+		                alram_no desc
+		        )
+    	where rownum <= 5
+    ]]>
+	</select>
+	
+	
+	
+	<!-- 메시지 -->
+	
+	<select id="getAllSendMessages" parameterType="string" resultType="Message">
+		select
+		    message_no      as messageNo,
+		    title           as title,
+		    content         as content,
+		    send_user       as sendUser,
+		    receive_user    as receiveUser,
+		    read_yn         as readYn,
+		    created_date    as createdDate,
+		    user_id         as userId
+		from
+		    moim_message
+		where
+		    user_id = #{value}
+		and
+		    send_user = #{value}
+		order by
+		    message_no desc	
+	</select>
+	
+	<select id="getAllReceiveMessages" parameterType="string" resultType="Message">
+		select
+		    message_no      as messageNo,
+		    title           as title,
+		    content         as content,
+		    send_user       as sendUser,
+		    receive_user    as receiveUser,
+		    read_yn         as readYn,
+		    created_date    as createdDate,
+		    user_id         as userId
+		from
+		    moim_message
+		where
+		    user_id = #{value}
+		and
+		    receive_user = #{value}
+		order by
+		    message_no desc	
+	</select>
+	
+	
+	<delete id="deleteMessage" parameterType="long">
+		delete from moim_message
+		where
+			message_no = #{value}
+	</delete>
+	
+	<delete id="deleteAllMessage" parameterType="Message">
+		delete from moim_message
+		<where>
+			<if test="sendUser != null">
+				send_user = #{sendUser}
+			</if>
+			<if test="receiveUser != null">
+				receive_user = #{receiveUser}
+			</if>
+		</where>
+		and
+			user_id = #{userId}
+	</delete>
+	
+	<update id="updateMessage" parameterType="long">
+		update moim_message
+		set
+			read_yn = 'Y'
+		where
+			message_no = #{value}
+	</update>
+</mapper>

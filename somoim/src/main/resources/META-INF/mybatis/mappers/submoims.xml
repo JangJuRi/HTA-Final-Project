@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sample.dao.SubMoimDao">
+
+	<insert id="insertSubMoim" parameterType="SubMoim">
+		<selectKey keyProperty="subMoimNo" resultType="long" order="BEFORE">
+			select sub_moim_seq.nextval from dual
+		</selectKey>
+		insert into moim_sub_moim
+		(sub_moim_no, title, location, head_count, fee, join_date, user_id, moim_no)
+		values
+		(#{subMoimNo}, #{title}, #{location}, #{headCount}, #{fee}, #{joinDate}, #{userId}, #{moimNo})
+	</insert>
+	
+	<select id="selectSubMoims" parameterType="long" resultType="SubMoim">
+		select
+			sub_moim_no		as subMoimNo,
+			title			as title,
+			location		as location,
+			head_count		as headCount,
+			fee				as fee,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			join_count		as joinCount,
+			created_date	as createdDate,
+			user_id			as userId,
+			moim_no			as moimNo
+		from
+			moim_sub_moim
+		where
+			moim_no = #{value}
+		order by
+			sub_moim_no desc
+	</select>
+	
+	<select id="selectSubMoim" parameterType="long" resultType="SubMoim">
+		select
+			sub_moim_no		as subMoimNo,
+			title			as title,
+			location		as location,
+			head_count		as headCount,
+			fee				as fee,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			join_count		as joinCount,
+			created_date	as createdDate,
+			user_id			as userId,
+			moim_no			as moimNo
+		from
+			moim_sub_moim
+		where
+			sub_moim_no = #{value}
+	</select>
+	
+	<update id="updateSubMoim" parameterType="SubMoim">
+		update moim_sub_moim
+		set
+			title = #{title},
+			location = #{location},
+			join_count = ${joinCount},
+			head_count = #{headCount},
+			fee = #{fee},
+			join_date = #{joinDate}
+		where
+			sub_moim_no = #{subMoimNo}
+	</update>
+	
+	<delete id="deleteSubMoim" parameterType="long">
+		delete from moim_sub_moim
+		where
+			sub_moim_no = #{value}
+	</delete>
+	
+	<delete id="deleteSubMoims" parameterType="SubJoinUser">
+		delete from moim_sub_moim
+		where
+			moim_no = #{moimNo}
+		and
+			user_id = #{userId}
+	</delete>
+	
+	<delete id="deleteSubMoimsJoinUser" parameterType="SubJoinUser">
+		delete from moim_sub_join_user
+		where
+			moim_no = #{moimNo}
+		and
+			user_id = #{userId}
+	</delete>
+	
+	<insert id="insertSubJoinUser" parameterType="SubJoinUser">
+		insert into moim_sub_join_user
+		(sub_moim_no, moim_no, user_id)
+		values
+		(#{subMoimNo}, #{moimNo}, #{userId})
+	</insert>
+	
+	<select id="selectSubJoinUsers" parameterType="long" resultType="SubJoinUsers">
+		select
+			sub_moim_no as subMoimNo,
+			moim_no as moimNo,
+			a.user_id as userId,
+            user_name as userName,
+            nickname as nickname,
+            profile_image as profileImage
+		from
+			moim_sub_join_user A, moim_user B
+		where
+			sub_moim_no = #{value}
+        and
+            a.user_id = b.user_id
+		order by
+			a.user_id asc
+	</select>
+	
+	<select id="selectSubJoinUser" parameterType="SubJoinUser" resultType="SubJoinUser">
+		select
+			sub_moim_no as subMoimNo,
+			moim_no as moimNo,
+			user_id as userId
+		from
+			moim_sub_join_user
+		where
+			sub_moim_no = #{subMoimNo}
+		and
+			user_id = #{userId}
+	</select>
+	
+	<delete id="deleteSubJoinUsers" parameterType="long">
+		delete from moim_sub_join_user
+		where
+			sub_moim_no = #{value}
+	</delete>
+	
+	<delete id="deleteSubJoinUser" parameterType="SubJoinUser">
+		delete from moim_sub_join_user
+		where
+			sub_moim_no = #{subMoimNo}
+		and
+			user_id = #{userId}
+	</delete>
+</mapper>

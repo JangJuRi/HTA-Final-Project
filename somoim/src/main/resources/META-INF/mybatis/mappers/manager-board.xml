@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sample.dao.ManagerBoardDao">
+	<insert id="insertBoard" parameterType="ManagerBoard">
+		<selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+			select manager_board_seq.nextval from dual
+		</selectKey>
+		insert into moim_manager_board
+		(manager_board_no, manager_board_title, manager_board_content)
+		values
+		(#{boardNo}, #{boardTitle}, #{boardContent})
+	</insert>
+	
+	<select id="selectAllBoards" parameterType="Pagination" resultType="ManagerBoard">
+		select
+			manager_board_no		as boardNo,
+			manager_board_title		as boardTitle,
+			manager_board_content	as boardContent,
+			views					as views,
+			delete_yn				as deleteYn,
+			created_date			as createdDate
+		from
+			(select
+                manager_board_no,
+                manager_board_title,
+                manager_board_content,
+                views,
+                delete_yn,
+                created_date,
+                row_number() over(order by manager_board_no desc) rn
+            from
+                moim_manager_board
+            where
+                delete_yn = 'N'
+            order by
+                manager_board_no desc)
+        where
+            <![CDATA[rn >= #{beginIndex} and rn <= #{endIndex}]]>
+	</select>
+	
+	<select id="selectBoardByNo" parameterType="long" resultType="ManagerBoard">
+		select
+			manager_board_no		as boardNo,
+			manager_board_title		as boardTitle,
+			manager_board_content	as boardContent,
+			views					as views,
+			delete_yn				as deleteYn,
+			created_date			as createdDate
+		from
+			moim_manager_board
+		where
+			manager_board_no = #{value}
+	</select>
+	
+	<update id="deleteBoard" parameterType="long">
+		update moim_manager_board
+		set
+			delete_yn = 'Y'
+		where
+			manager_board_no = #{value}
+	</update>
+	
+	<update id="updateBoard" parameterType="ManagerBoard">
+		update moim_manager_board
+		set
+			manager_board_title = #{boardTitle},
+			manager_board_content = #{boardContent}
+		where
+			manager_board_no = #{boardNo}
+	</update>
+	
+	<select id="getTotalRowCount" resultType="int">
+	select
+		count(*)
+	from
+		moim_manager_board
+	where
+		delete_yn = 'N'
+	</select>
+	
+	<update id="increaseViews" parameterType="long">
+		update moim_manager_board
+		set
+			views = views + 1
+		where
+			manager_board_no = #{value}
+	</update>
+</mapper>

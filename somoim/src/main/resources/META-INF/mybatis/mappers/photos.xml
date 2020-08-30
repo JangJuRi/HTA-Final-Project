@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sample.dao.PhotoDao">
+
+	<insert id="insertPhoto" parameterType="Photo">
+		<selectKey keyProperty="photoNo" resultType="long" order="BEFORE">
+			select photo_seq.nextval from dual
+		</selectKey>
+		insert into moim_photo
+		(photo_no, photo, moim_no, user_id)
+		values
+		(#{photoNo}, #{photo}, #{moimNo}, #{userId})
+	</insert>
+	
+	<select id="selectPhotos" parameterType="long" resultType="PhotoWIthLikeDto">
+		select
+			photo_no		as photoNo,
+			photo			as photo,
+			likes			as likes,
+			delete_yn		as deleteYn,
+			created_date	as createdDate,
+			moim_no			as moimNo,
+			user_id			as userId
+		from
+			moim_photo
+		where
+			moim_no = #{value}
+		order by
+			photo_no desc
+	</select>
+	
+	<select id="selectPhotosWithRange" parameterType="hashMap" resultType="PhotoWIthLikeDto">
+		select 
+		    photo_no		as photoNo,
+		    photo			as photo,
+		    likes			as likes,
+		    delete_yn		as deleteYn,
+		    created_date	as createdDate,
+		    moim_no			as moimNo,
+		    user_id			as userId
+		from 
+		    (select
+		        photo_no,		
+		        photo,		
+		        likes,			
+		        delete_yn,	
+		        created_date,
+		        moim_no,	
+		        user_id,	
+		        row_number() over(order by photo_no desc) rn
+		    from
+		        moim_photo
+		    where
+		        moim_no = #{moimNo}
+		    order by
+		        photo_no desc)
+		<![CDATA[where rn > #{beginIndex} and rn <= #{endIndex}]]>
+	</select>
+	
+	<select id="selectPhoto" parameterType="long" resultType="Photo">
+		select
+			photo_no		as photoNo,
+			photo			as photo,
+			likes			as likes,
+			delete_yn		as deleteYn,
+			created_date	as createdDate,
+			moim_no			as moimNo,
+			user_id			as userId
+		from
+			moim_photo
+		where
+			photo_no = #{value}
+	</select>
+	
+	<update id="updatePhoto" parameterType="Photo">
+		update moim_photo
+		set
+			photo = #{photo},
+			likes = #{likes},
+			delete_yn = #{deleteYn}
+		where
+			photo_no = #{photoNo}
+	</update>
+	
+	<select id="getPhotosByUserId" parameterType="string" resultType="PhotoWIthLikeDto">
+		select
+			photo_no		as photoNo,
+			photo			as photo,
+			likes			as likes,
+			delete_yn		as deleteYn,
+			created_date	as createdDate,
+			moim_no			as moimNo,
+			user_id			as userId
+		from
+			moim_photo
+		where
+			user_id = #{value}
+	</select>
+	
+	<select id="getCheckLikeYN" parameterType="HashMap" resultType="int">
+		select count(*)
+		from moim_photo_user_like
+		where user_id = #{userId}
+		and photo_no = #{photoNo}
+	</select>
+	
+	<select id="getPhotoLikesByUserId" parameterType="PhotoLikes" resultType="PhotoLikes">
+		select
+		    photo_no		as photoNo,
+		    user_id			as userId,
+		    moim_no			as moimNo
+		from
+		    moim_photo_user_like
+		where
+		    moim_no = #{moimNo}
+		and
+		    user_id = #{userId}
+	</select>
+	
+	<insert id="insertLike" parameterType="PhotoLikes">
+		insert into moim_photo_user_like
+		(photo_no, user_id, moim_no)
+		values
+		(#{photoNo}, #{userId}, #{moimNo})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="PhotoLikes">
+		delete from
+			moim_photo_user_like
+		where
+			user_id = #{userId}
+		and
+			moim_no = #{moimNo}
+		and
+			photo_no = #{photoNo}
+	</delete>	
+
+	
+</mapper>

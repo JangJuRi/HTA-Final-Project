@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sample.dao.FollowerDao">
+	
+	<select id="getFollowersByUserId" parameterType="string" resultType="com.sample.dto.MoimFollowDto">
+		select
+			A.user_id		as userId,
+			A.fol_user_id	as folUserId,
+			B.profile_image as image,
+			B.nickname		as nickname
+			
+		from
+			moim_follow A, moim_user B
+		where
+			A.user_id = #{value}
+		and
+			A.fol_user_id = B.user_id
+	</select>
+	
+	<select id="getFollowingsByUserId" parameterType="string" resultType="com.sample.dto.MoimFollowDto">
+		select
+			A.user_id		as userId,
+			A.fol_user_id	as folUserId,
+			B.profile_image as image,
+			B.nickname		as nickname
+			
+		from
+			moim_follow A, moim_user B
+		where
+			A.fol_user_id = #{value}
+		and
+			A.user_id = B.user_id
+	</select>
+
+	<select id="getUserMoims" parameterType="string" resultType="MoimJoinUser">
+		select
+			A.moim_no	   as moimNo,
+			A.user_id	   as userId,
+			A.user_role    as userRole,
+			A.created_date as createdDate,
+			B.title		   as title,
+			B.image		   as image,
+			B.content	   as content,
+			B.join_count   as joinCount,
+			B.head_count   as headCount,
+			B.likes		   as likes,
+			B.join_date	   as joinDate,
+			b.PREMIUM_YN    as premiumYn
+		from
+			moim_join_user A, moim_main B
+		where
+		 	A.moim_no = B.moim_no
+		 and
+		 	A.user_id = #{value}
+	</select>
+	
+	<insert id="insertFollower" parameterType="Follow">
+		insert into moim_follow
+		(user_id, fol_user_id)
+		values
+		(#{userId}, #{folUserId})
+	</insert>
+	
+	<select id="findFollower" parameterType="Follow" resultType="int">
+		select
+			count(*)
+		from
+			moim_follow
+		where
+			user_id = #{userId}
+		and
+			fol_user_id = #{folUserId}
+	</select>
+	
+	<delete id="deleteFollower" parameterType="Follow">
+		delete from 
+			moim_follow
+		where 
+			user_id = #{userId}
+		and
+			fol_user_id = #{folUserId}
+	</delete>
+	
+	<!-- 좋아요 순 인기모임 표시 -->
+	<select id="selectFavoliteMoims" parameterType="string" resultType="MainDto">
+		select
+		    b.moim_no	   as moimNo,
+		    A.user_id	   as userId,
+		    B.title		   as title,
+		    B.image		   as image,
+		    B.content	   as content,
+		    B.join_count   as joinCount,
+		    B.head_count   as headCount,
+		    B.likes		   as likes,
+		    B.join_date	   as joinDate,
+		    b.PREMIUM_YN    as premiumYn
+		from
+		    moim_favolite_moim a, moim_main b
+		where
+		    a.user_id = #{value}
+		and
+		    A.moim_no = B.moim_no
+		and
+		    b.delete_yn = 'N'
+	</select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sample.dao.UserDao">
+
+	<!-- 유저 아이디 조회 -->
+	<select id="getUserById" parameterType="String" resultType="User">
+		select
+			user_id					as  id,
+			user_name 				as	name,
+			tel						as	tel,
+			user_password			as  password,
+			nickname				as  nickname,
+			email					as  email,
+			birth					as  birthDate,
+			gender					as  gender,
+			user_content 			as  content,
+			delete_yn				as  deleteYN,
+			created_date			as	createdDate,
+			location_no				as	locationNo,
+			profile_image			as	profileImage,
+			suspended_account_yn 	as  suspendedAccountYn
+		from
+			moim_user
+		where
+			user_id = #{value}
+	</select>
+	
+	<!-- 유저 회원가입 -->
+	 <insert id="insertUser" parameterType="User">
+		insert into moim_user
+			(user_id, user_name, tel, user_password, nickname, email, birth, gender, user_content, location_no, profile_image)
+			values
+			(#{id}, #{name}, #{tel}, #{password}, #{nickname}, #{email}, #{birthDate}, #{gender}, #{content}, #{locationNo}, #{profileImage})
+	</insert> 
+	
+	<!-- 유저 정보 업데이트 -->
+	<update id="updateUser" parameterType="User">
+		update
+			moim_user
+		set
+			nickname = #{nickname},
+			user_password = #{password},
+			email = #{email},
+			user_content = #{content},
+			location_no = #{locationNo},
+			profile_image = #{profileImage}
+		where
+			user_id = #{id}
+	</update>
+	
+	<!-- 유저 ID삭제 -->
+	<delete id="deleteUser" parameterType="string">
+		update
+			moim_user
+		set
+			delete_yn = 'Y'
+		where
+			user_id = #{id}
+	</delete>
+	
+	<insert id="insertUserCate" parameterType="UserCate">
+		insert into moim_user_cate
+			(user_id, main_cate_no)
+		values
+		(#{userId}, #{mainCateNo})
+	</insert>
+</mapper>

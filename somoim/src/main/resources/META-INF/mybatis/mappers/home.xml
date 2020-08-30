@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.sample.dao.HomeDao">
+	<!-- 키워드 검색기능 -->
+	<select id="searchFunction" parameterType="string" resultType="MainDto"> 
+	select
+			a.moim_no		as moimNo,
+			title			as title,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			join_date		as joinDate,
+			a.premium_yn	as premiumYn,
+			a.created_date	as createdDate,
+			b.location_no	as locationNo,
+			b.name      	as locationName,
+            c.sub_cate_no	as subCateNo,
+			c.name			as subCateName,
+			d.main_cate_no	as mainCateNo,
+			d.name			as mainCateName
+	from
+			moim_main a
+			join moim_location b on a.location_no = b.location_no
+			join moim_sub_cate c on a.sub_cate_no = c.sub_cate_no
+			join moim_main_category d on c.main_cate_no = d.main_cate_no
+	where 
+			(a.title like '%' || #{value} || '%'
+	or
+			a.content like '%' || #{value} || '%'
+    or
+			d.name like '%' || #{value} || '%'
+	or
+			c.name like '%' || #{value} || '%'
+	or 
+			d.name like '%' || #{value} || '%')
+	and
+			a.delete_yn = 'N'
+	order by 
+			a.created_date desc
+	</select>
+	
+	<!-- 셀렉트박스 검색 -->
+	<select id ="selectSearchFunction" parameterType="map" resultType="MainDto">
+	select
+			a.moim_no		as moimNo,
+			title			as title,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			d.sub_cate_no	as subCateNo,
+			d.name			as subCateName,
+			e.location_no	as locationNo,
+			e.name      	as locationName,
+			c.main_cate_no	as mainCateNo,
+			c.name			as mainCateName
+	from 
+			moim_main A, moim_main_category C, 
+            moim_sub_cate D, moim_location E
+	<where>
+            c.main_cate_no = d.main_cate_no 
+	and
+			a.sub_cate_no = d.sub_cate_no 
+	and 
+			e.location_no = a.location_no
+	and
+			delete_yn = 'N'
+    and	
+    	(a.title like '%' || #{keyword} || '%'
+	or
+		a.content like '%' || #{keyword} || '%'
+	or
+		e.name like '%' || #{keyword} || '%'
+	or
+		c.name like '%' || #{keyword} || '%'
+	or 
+		d.name like '%' || #{keyword} || '%')
+		<if test="locationNo != 0">
+	and
+        e.location_no = #{locationNo}
+        </if>
+		<if test="subCateNo != 0">
+    and 
+        d.sub_cate_no = #{subCateNo}
+        </if>
+		<if test="mainCateNo != 0">
+	and
+        c.main_cate_no = #{mainCateNo}
+        </if>
+    order by 
+		a.created_date desc
+	</where>
+	</select>
+	
+	
+	<!-- 상세정보 -->
+	<select id="detailViewMoims" parameterType="long" resultType="DetailViewMoimsDto">
+		select a.moim_no		as moimNo
+		    , a.title			as title
+		    , a.join_count		as joinCount
+		    , a.head_count		as headCount
+		    , a.content			as content
+		    , a.image			as image
+		    , a.fee				as fee
+		    , a.likes			as likes
+		    , a.premium_yn		as premiumYn
+		    , a.delete_yn		as deleteYn
+		    , a.join_date		as joinDate
+		    , a.created_date	as createdDate
+		    , b.main_cate_no	as mainCateNo
+		    , b.name			as mainCateName
+		    , c.sub_cate_no		as subCateNo
+		    , c.name			as subCateName
+		    , d.location_no		as locationNo 
+		    , d.name			as locationName
+		    , e.user_id			as userId
+		    , f.nickname		as nickName
+		    , f.profile_image	as profileImage
+		    , f.user_content	as userContent
+		from moim_main A, moim_main_category B, moim_sub_cate C, moim_location D
+		    , moim_join_user E, moim_user F
+		where a.sub_cate_no = c.sub_cate_no
+		and c.main_cate_no = b.main_cate_no
+		and a.location_no = d.location_no
+		and a.moim_no = e.moim_no
+		and e.user_role = 'ADMIN'
+		and e.user_id = f.user_id
+		and a.moim_no = #{value}
+	</select>
+	<select id="checkJoinMoim" parameterType="hashmap" resultType="int">
+		select count(*)
+		from moim_join_user
+		where user_id = #{userId}
+		and moim_no = #{moimNo}
+	</select>
+
+	<!-- 랜덤 모임 표시 -->
+	<select id="randomMoims" parameterType="hashmap" resultType="MainDto">
+	select * from (
+		select
+			a.moim_no		as moimNo,
+			title			as title,
+            user_id         as userId,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			sub_cate_no		as subCateNo,
+			location_no		as locationNo,
+			row_number() over(order by a.moim_no desc) rn
+		from
+			moim_main A, moim_join_user B
+        where
+            b.user_role = 'ADMIN'
+        and 
+            a.moim_no = b.moim_no
+        and
+        	a.delete_yn = 'N'
+        )
+		<![CDATA[where rn > #{beginIndex} and rn <= #{endIndex}]]>
+	</select>
+	
+	<!-- 지역 선호도 별로 표시 -->
+	<select id="locationMoims" parameterType="hashmap" resultType="MainDto">
+       select * from (
+			select 
+						a.moim_no		as moimNo,
+						title			as title,
+						join_count		as joinCount,
+						head_count		as headCount,
+						content			as content,
+						image			as image,
+						fee				as fee,
+						likes			as likes,
+						premium_yn		as premiumYn,
+						join_date		as joinDate,
+						a.created_date	as createdDate,
+						sub_cate_no		as subCateNo,
+						a.location_no	as locationNo,
+						b.name			as locationName,
+			            row_number() over(order by join_date desc) rn
+					from 
+						moim_main A, moim_location B
+					where
+						a.location_no = b.location_no
+			        and
+			            a.location_no = #{locationNo}
+			        and
+			        	a.delete_yn = 'N'
+			        )
+			<![CDATA[where rn >= #{beginIndex} and rn <= #{endIndex}]]>
+	</select>
+	
+	<!-- 좋아요 순 인기모임 표시 -->
+	<select id="favoliteMoims" parameterType="long" resultType="MainDto">
+	
+	<![CDATA[
+	select * from(
+    select 
+			moim_no			as moimNo,
+			title			as title,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			join_date		as joinDate,
+			created_date	as createdDate,
+			sub_cate_no		as subCateNo,
+			location_no		as locationNo
+
+		from 
+			moim_main
+		where
+        	delete_yn = 'N'
+		order by
+			likes desc
+	) where rownum <= 8
+	]]>
+	
+	</select>
+	
+	<!-- 카테고리 랜덤표시 -->
+	<select id="mainCategoryMoims" parameterType="hashmap" resultType="MainDto">
+	 select * from(
+	 	select 
+			a.moim_no		as moimNo,
+			title			as title,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			b.main_cate_no	as mainCateNo,
+			c.sub_cate_no	as subCateNo,
+			b.name			as mainCateName,
+            row_number() over(order by join_date desc) rn
+		from 
+			moim_main A, moim_main_category B, moim_sub_cate C
+		where
+			a.sub_cate_no = c.sub_cate_no and b.main_cate_no = c.main_cate_no
+        and
+            b.main_cate_no = #{mainCateNo}
+        and
+        	a.delete_yn = 'N'
+	 ) <![CDATA[where rn >= #{beginIndex} and rn <= #{endIndex}]]>
+	
+	</select>
+	
+	<!--내가 가입한 모임 표시 -->
+	<select id="joinedMoim" parameterType="string" resultType="MainDto">
+	<![CDATA[
+	select * from(
+	select
+		a.moim_no		as moimNo,
+		title			as title,
+		join_count		as joinCount,
+		head_count		as headCount,
+		content			as content,
+		image			as image,
+		fee				as fee,
+		likes			as likes,
+		premium_yn		as premiumYn,
+		join_date		as joinDate,
+		a.created_date	as createdDate,
+		user_role		as userRole
+	from 
+		moim_join_user A ,moim_main B
+	where 
+		user_id = #{value}
+	and 
+		A.moim_no = B.moim_no
+	and
+        delete_yn = 'N'
+	order by 
+		join_date asc
+	) where rownum <= 3
+	]]>
+	</select>
+	
+	<!-- 나를 팔로워한 친구들 -->
+	<select id="followUsers" parameterType="string" resultType="MoimFollowDto">
+	select
+	A.user_id		as userId,
+	A.fol_user_id	as folUserId,
+	B.profile_image as image,
+	B.nickname		as nickname
+	
+	from
+		moim_follow A, moim_user B
+	where
+		A.user_id = #{value}
+	and
+        delete_yn = 'N'
+	and
+		A.fol_user_id = B.user_id
+	</select>
+
+	
+	<select id="likesMoim" parameterType="FavoriteMoim" resultType="FavoriteMoim">
+	select 
+		moim_no		as moimNo,
+		user_id		as userId
+	from
+		moim_favolite_moim
+	where
+		moim_no = #{moimNo}
+	and
+		user_id = #{userId}
+	</select>
+	
+	<insert id="addLikesMoim" parameterType="FavoriteMoim">
+	insert into moim_favolite_moim
+		(moim_no, user_id)
+		values
+		(#{moimNo}, #{userId})
+	</insert>
+	
+	<delete id="deleteLikesMoim" parameterType="FavoriteMoim">
+	delete from moim_favolite_moim
+		where
+			moim_no = #{moimNo}
+		and
+			user_id = #{userId}
+	</delete>
+	
+	<!-- 좋아요한 모임 표시 -->
+	<select id="selectMoim" parameterType="String" resultType="FavoriteMoim">
+	<![CDATA[
+	select * from(
+		select 
+				a.moim_no		as moimNo,
+				c.user_id	 	as userId,
+				title			as title,
+				content			as content,
+				liked_date		as likedDate,
+				b.premium_yn	as premiumYn
+			from
+				moim_favolite_moim A, moim_main B, moim_user C
+			where
+				c.user_id = #{value}
+            and
+                A.moim_no = B.moim_no and A.user_id = C.user_id
+			and
+				b.delete_yn = 'N'
+            order by liked_date asc
+	)where rownum <= 3
+	]]>
+	</select>
+	
+	<select id="LocationName" parameterType="long" resultType="string">
+		select name
+		from moim_location
+		where location_no = #{value}
+	</select>
+	<select id="mainCategory" parameterType="long" resultType="string">
+		select name
+		from moim_main_category
+		where main_cate_no = #{value}
+	</select>
+	<select id="subCategory" parameterType="long" resultType="string">
+		select name
+		from moim_sub_cate
+		where sub_cate_no = #{value}
+	</select>
+	
+	<select id="getAllLocationCount" parameterType="long" resultType="long">
+		select count(*)
+		from moim_main
+		where location_no = #{value}
+		and delete_yn = 'N'
+	</select>
+	
+	<select id="getAllMainCateCount" parameterType="long" resultType="long">
+		select count(*)
+		from moim_main A, moim_sub_cate B
+		where
+			a.sub_cate_no = b.sub_cate_no
+		and
+			b.main_cate_no = #{value}
+		and
+			a.delete_yn = 'N'
+	</select>
+	
+	<select id="getAllMoimsCount" resultType="long">
+		select count(*)
+		from moim_main
+		where delete_yn = 'N'
+	</select>
+	
+	<!-- 공지사항 9개 뽑기 -->
+	<select id="moimManagerBoardList" resultType="ManagerBoard">
+	<![CDATA[
+		select * from(
+		select
+			manager_board_no 		as boardNo
+            , manager_board_title	as boardTitle
+            , manager_board_content	as boardContent
+            , views					as views
+            , delete_yn				as deleteYn
+            , created_date			as createdDate
+		from
+			moim_manager_board
+        where
+        	delete_yn = 'N'
+        order by
+        	created_date DESC
+	)where rownum <= 10
+	]]>
+	</select>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<mvc:annotation-driven></mvc:annotation-driven>
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+	<mvc:view-resolvers order="2">
+		<mvc:jsp prefix="/WEB-INF/views/" suffix=".jsp"/>
+	</mvc:view-resolvers>
+	
+	<!-- 타일즈 뷰 설정 -->    
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">  		
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />  		
+		<property name="order" value="1" /> 	
+	</bean> 	
+	
+	<!-- 타일즈 레이아웃 설정  --> 	
+	<bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+   			<list>
+    			<value>/WEB-INF/tiles/default-layout.xml</value>
+   			</list>
+  		</property>
+	</bean>
+	
+	<!-- 인터셉터를 스프링의 빈으로 등록하기  -->
+	<bean id="authenticationInterceptor" 
+		class="com.sample.web.interceptor.AuthenticationInterceptor">
+	</bean>
+<bean id="userBanInterceptor"
+		class="com.sample.web.interceptor.UserBanInterceptor"></bean> 
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<mvc:exclude-mapping path="/login/**"/>
+			<ref bean="authenticationInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<mvc:exclude-mapping path="/login/**"/>
+			<ref bean="userBanInterceptor"/>
+		</mvc:interceptor> 
+	</mvc:interceptors>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	
+	<context:component-scan base-package="com.sample.web"></context:component-scan>
+	
+	<context:annotation-config/>
+
+</beans>

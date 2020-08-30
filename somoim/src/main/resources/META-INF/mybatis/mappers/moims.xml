@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sample.dao.MoimDao">
+
+	<insert id="insertMoim" parameterType="Main">
+		<selectKey keyProperty="moimNo" resultType="long" order="BEFORE">
+			select moim_seq.nextval from dual
+		</selectKey>
+		insert into moim_main
+		(moim_no, title, head_count, content, image, fee, join_date, sub_cate_no, location_no)
+		values
+		(#{moimNo}, #{title}, #{headCount}, #{content}, #{image}, #{fee}, #{joinDate}, #{subCateNo}, #{locationNo})
+	</insert>
+	
+	<insert id="insertMoimBanner" parameterType="long">
+		insert into moim_banner
+		values(#{moimNo}, 'banner.jpg')
+	</insert>
+	
+	<select id="selectMoims" resultType="MainDto">
+		select
+			a.moim_no		as moimNo,
+			title			as title,
+            user_id         as userId,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			sub_cate_no		as subCateNo,
+			location_no		as locationNo
+		from
+			moim_main A, moim_join_user B
+        where
+            b.user_role = 'ADMIN'
+        and
+            a.moim_no = b.moim_no
+		order by
+			a.moim_no desc
+	</select>
+	
+	<select id="selectMoim" parameterType="long" resultType="MainDto">
+		select
+			a.moim_no		as moimNo,
+			title			as title,
+            user_id         as userId,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			sub_cate_no		as subCateNo,
+			location_no		as locationNo
+		from
+			moim_main A, moim_join_user B
+		where
+			a.moim_no = #{value}
+		and
+			b.user_role = 'ADMIN'
+		and
+            a.moim_no = b.moim_no
+	</select>
+	
+	<select id="selectBanner" parameterType="long" resultType="String">
+		select			
+			banner
+		from
+			moim_banner
+		where
+			moim_no = #{value}
+	</select>
+	
+	
+	<update id="updateMoim" parameterType="MainDto">
+		update moim_main
+		set
+			title = #{title},
+			join_count = #{joinCount},
+			head_count = #{headCount},
+			content = #{content},
+			image = #{image},
+			fee = #{fee},
+			likes = #{likes},
+			premium_yn = #{premiumYn},
+			delete_yn = #{deleteYn},
+			join_date = #{joinDate},
+			sub_cate_no = #{subCateNo},
+			location_no = #{locationNo}
+		where
+			moim_no = #{moimNo}
+	</update>
+	
+	<update id="updateBanner" parameterType="Banner">
+		update moim_banner
+		set
+			banner = #{banner}
+		where
+			moim_no = #{moimNo}
+	</update>
+	
+	<insert id="insertJoinUser" parameterType="JoinUser">
+		insert into moim_join_user
+		(moim_no, user_id, user_role)
+		values
+		(#{moimNo}, #{userId}, #{userRole})
+	</insert>
+	
+	<select id="selectJoinUsers" parameterType="long" resultType="JoinUsers">
+		select
+			moim_no as moimNo,
+			a.user_id as userId,
+            user_name as userName,
+            nickname as nickname,
+			user_role as userRole,
+			a.created_date as createdDate,
+			b.profile_image as profileImage
+		from
+			moim_join_user A, moim_user B
+		where
+			moim_no = #{value}
+        and
+            a.user_id = b.user_id
+		order by
+			user_role, a.user_id asc
+	</select>
+	
+	<select id="selectJoinUser" parameterType="JoinUser" resultType="JoinUser">
+		select 
+			moim_no			as moimNo,
+			user_id			as userId,
+			user_role		as userRole
+		from 
+			moim_join_user
+		where
+			moim_no = #{moimNo}
+		and
+			user_id = #{userId}
+	</select>
+	
+	<delete id="deleteJoinUser" parameterType="JoinUser">
+		delete from moim_join_user
+		where
+			moim_no = #{moimNo}
+		and
+			user_id = #{userId}
+	</delete>
+	
+	<delete id="deleteJoinUsers" parameterType="long">
+		delete from moim_join_user
+		where
+			moim_no = #{value}
+	</delete>
+</mapper>

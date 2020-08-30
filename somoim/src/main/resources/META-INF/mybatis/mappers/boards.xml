@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sample.dao.BoardDao">
+	
+	<insert id="insertMoimBoard" parameterType="Board">
+		<selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+			select board_seq.nextval from dual
+		</selectKey>
+		insert into moim_board
+		(board_no, title, content, moim_no, user_id, board_cate_no)
+		values
+		(#{boardNo}, #{title}, #{content}, #{moimNo}, #{userId}, #{boardCateNo})
+	</insert>
+	
+	<select id="selectMoimBoards" parameterType="Page" resultType="Board">
+		select 
+		    board_no		as boardNo,
+		    title			as title,
+		    content			as content,
+		    views			as views,
+		    delete_yn		as deleteYn,
+		    created_date	as createdDate,
+		    moim_no			as moimNo,
+		    user_id			as userId,
+		    board_cate_no	as boardCateNo
+		from
+			(select
+			    board_no,
+			    title,
+			    content,
+			    views,
+			    delete_yn,
+			    created_date,
+			    moim_no,
+			    user_id,
+			    board_cate_no,
+			    row_number() over(order by board_no desc) rn
+			from
+			    moim_board
+			where
+			    moim_no = #{no}
+			and
+			    delete_yn = 'N'
+			and 
+			    (board_cate_no = 2 or board_cate_no = 3)    
+			order by
+			    board_no desc)
+		where 
+			<![CDATA[rn >= #{begin} and rn <= #{end}]]>
+	</select>
+	
+	<select id="selectMoimBoard" parameterType="long" resultType="Board">
+		select
+			a.board_no			as boardNo,
+			a.title				as title,
+			a.content			as content,
+			a.views				as views,
+			a.delete_yn			as deleteYn,
+			a.created_date		as createdDate,
+			a.moim_no			as moimNo,
+			a.user_id			as userId,
+			a.board_cate_no		as boardCateNo,
+			b.profile_image		as profileImage
+		from
+			moim_board A, moim_user B
+		where
+			board_no = #{value}
+		and
+			a.user_id = b.user_id
+	</select>
+	
+	<update id="updateMoimBoard" parameterType="Board">
+		update moim_board
+		set
+			title = #{title},
+			content = #{content},
+			views = #{views},
+			delete_yn = #{deleteYn},
+			board_cate_no = #{boardCateNo}
+		where
+			board_no = #{boardNo}
+	</update>
+	
+	<select id="getBoardsByUserId" parameterType="string" resultType="Board">
+		select
+			board_no		as boardNo,
+			title			as title,
+			content			as content,
+			views			as views,
+			delete_yn		as deleteYn,
+			created_date	as createdDate,
+			moim_no			as moimNo,
+			user_id			as userId,
+			board_cate_no	as boardCateNo
+		from
+			moim_board
+		where
+			user_id = #{value}
+	</select>
+		
+	<select id="getBoardsByCategory" parameterType="Board" resultType="Board">
+		select
+			board_no		as boardNo,
+			title			as title,
+			content			as content,
+			views			as views,
+			delete_yn		as deleteYn,
+			created_date	as createdDate,
+			moim_no			as moimNo,
+			user_id			as userId,
+			board_cate_no	as boardCateNo
+		from
+			moim_board
+		where
+			board_cate_no = #{boardCateNo}
+		and
+			moim_no = #{moimNo}
+		order by board_no desc
+	</select>
+	
+	<select id="getRecentBoardsByNotice" parameterType="Long" resultType="Board">
+		select 
+			board_no			as boardNo,
+				title			as title,
+				content			as content,
+				views			as views,
+				delete_yn		as deleteYn,
+				created_date	as createdDate,
+				moim_no			as moimNo,
+				user_id			as userId,
+				board_cate_no	as boardCateNo
+		from
+			(select
+				board_no,		
+				title,
+				content,
+				views,
+				delete_yn,
+				created_date,
+				moim_no,
+				user_id,
+				board_cate_no	
+			from
+				moim_board
+			where
+				board_cate_no = 1
+			and
+				moim_no = #{value}
+			order by board_no desc)
+		where
+			<![CDATA[rownum <= 3]]>
+	</select>
+	
+	<select id="getTotalRowCount" parameterType="long" resultType="int">
+		select 
+			count(*)
+		from 
+			moim_board
+		where 
+			moim_no = #{value}
+		and 
+			(board_cate_no = 2 or board_cate_no = 3)
+		and 
+			delete_yn = 'N'
+	</select>
+	
+	
+</mapper>

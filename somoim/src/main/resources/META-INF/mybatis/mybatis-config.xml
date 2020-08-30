@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd" >
+	
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="com.sample.vo.MoimAlram" alias="Alram"/>
+		<typeAlias type="com.sample.vo.MoimWarning" alias="Warning"/>
+		<typeAlias type="com.sample.vo.MoimBoard" alias="Board"/>
+		<typeAlias type="com.sample.vo.MoimBoardCate" alias="BoardCate"/>
+		<typeAlias type="com.sample.vo.MoimComment" alias="Comment"/>
+		<typeAlias type="com.sample.vo.MoimFavoriteMoim" alias="FavoriteMoim"/>
+		<typeAlias type="com.sample.vo.MoimFollow" alias="Follow"/>
+		<typeAlias type="com.sample.vo.MoimJoinUser" alias="JoinUser"/>
+		<typeAlias type="com.sample.dto.JoinUsers" alias="JoinUsers"/>
+		<typeAlias type="com.sample.vo.MoimLocation" alias="Location"/>
+		<typeAlias type="com.sample.vo.MoimMain" alias="Main"/>
+		<typeAlias type="com.sample.dto.MoimMainDto" alias="MainDto"/>
+		<typeAlias type="com.sample.vo.MoimMainCategory" alias="MainCategory"/>
+		<typeAlias type="com.sample.vo.MoimPhoto" alias="Photo"/>
+		<typeAlias type="com.sample.vo.MoimSubCate" alias="SubCate"/>
+		<typeAlias type="com.sample.vo.MoimSubJoinUser" alias="SubJoinUser"/>
+		<typeAlias type="com.sample.dto.SubJoinUsers" alias="SubJoinUsers"/>
+		<typeAlias type="com.sample.vo.MoimSubMoim" alias="SubMoim"/>
+		<typeAlias type="com.sample.dto.SubMoimDto" alias="SubMoimDto"/>
+		<typeAlias type="com.sample.vo.MoimUser" alias="User"/>
+		<typeAlias type="com.sample.vo.MoimUserCate" alias="UserCate"/>
+		<typeAlias type="com.sample.dto.MoimDates" alias="Dates"/>
+		<typeAlias type="com.sample.dto.MoimJoinUserMoimDto" alias="MoimJoinUser"/>
+		<typeAlias type="com.sample.dto.MoimFriends" alias="Friends"/>
+		<typeAlias type="com.sample.dto.MoimFollowDto" alias="MoimFollowDto"/>
+		<typeAlias type="com.sample.dto.DetailViewMoimsDto" alias="DetailViewMoimsDto"/>
+		<typeAlias type="com.sample.vo.MoimMessage" alias="Message"/>
+		<typeAlias type="com.sample.dto.PageDto" alias="Page"/>
+		<typeAlias type="com.sample.dto.ManagerDto" alias="Manager"/>
+		<typeAlias type="com.sample.vo.MoimPhotoLikes" alias="PhotoLikes"/>
+		<typeAlias type="com.sample.vo.MoimManagerBoard" alias="ManagerBoard"/>
+		<typeAlias type="com.sample.vo.Pagination" alias="Pagination"/>
+		<typeAlias type="com.sample.dto.PhotoWIthLikeDto" alias="PhotoWIthLikeDto"/>
+		<typeAlias type="com.sample.vo.MoimBanner" alias="Banner"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="META-INF/mybatis/mappers/boards.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/moims.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/users.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/submoims.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/photos.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/home.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/follow.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/friends.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/alrams.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/comment.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/searchbycategory.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/warnings.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/manager-board.xml"/>
+	</mappers>
+</configuration>
+
+
+
+
