@@ -54,7 +54,7 @@
 	
 	
 	
-	<!-- 메시지 -->
+	<!-- 쪽지 -->
 	
 	<select id="getAllSendMessages" parameterType="string" resultType="Message">
 		select
