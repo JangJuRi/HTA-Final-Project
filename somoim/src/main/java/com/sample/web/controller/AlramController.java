@@ -62,13 +62,11 @@ public class AlramController {
 		
 		Map<String, Object> messages = new HashMap<String, Object>();
 		
-		List<MoimMessage> sendMessages = alramService.sendMessages(user.getId());
 		// 보낸 쪽지함
-		/*model.addAttribute("sendMessages", sendMessages);*/
+		List<MoimMessage> sendMessages = alramService.sendMessages(user.getId());
 		messages.put("sendMessages", sendMessages);
-		List<MoimMessage> receiveMessages = alramService.receiveMessages(user.getId());
 		// 받은 쪽지함
-		/*model.addAttribute("receiveMessages", receiveMessages);*/
+		List<MoimMessage> receiveMessages = alramService.receiveMessages(user.getId());
 		messages.put("receiveMessages", receiveMessages);
 		
 		
