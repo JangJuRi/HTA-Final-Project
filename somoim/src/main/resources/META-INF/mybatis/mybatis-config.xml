@@ -58,6 +58,7 @@
 		<mapper resource="META-INF/mybatis/mappers/searchbycategory.xml"/>
 		<mapper resource="META-INF/mybatis/mappers/warnings.xml"/>
 		<mapper resource="META-INF/mybatis/mappers/manager-board.xml"/>
+		<mapper resource="META-INF/mybatis/mappers/map.xml"/>
 	</mappers>
 </configuration>
 

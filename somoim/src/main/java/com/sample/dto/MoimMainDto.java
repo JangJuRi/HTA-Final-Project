@@ -29,6 +29,7 @@ public class MoimMainDto {
 	private String subCateName;
 	private long locationNo;
 	private String locationName;
+	private String locationDetail;
 	private long mainCateNo;
 	private String mainCateName;
 	private List<MoimUser> friends;
@@ -151,6 +152,13 @@ public class MoimMainDto {
 	}
 	public void setLocationNo(long locationNo) {
 		this.locationNo = locationNo;
+	}
+	
+	public String getLocationDetail() {
+		return locationDetail;
+	}
+	public void setLocationDetail(String locationDetail) {
+		this.locationDetail = locationDetail;
 	}
 	@Override
 	public String toString() {

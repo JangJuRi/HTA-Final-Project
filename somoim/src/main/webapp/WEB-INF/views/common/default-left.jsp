@@ -93,15 +93,12 @@
 </style>
 
 <div id="mySidenav" class="sidenav">
-	<ul class="navbar-nav" style="text-align: center">
+	<ul class="navbar-nav" style="text-align: left">
 		<li class="nav-item active">
-			<a class="nav-link" href="/home.do"><i class="fas fa-home"></i> Home</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/manager/test.do"><i class="fab fa-hotjar"></i> 인기 모임</a>
+			<a class="nav-link pl-5" href="/home.do"><i class="fas fa-home"></i> Home</a>
 		</li>
         <li class="nav-item dropdown dropright">
-	        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" href="/cate/subCate.do"
+	        <a class="nav-link dropdown-toggle pl-5" id="navbarDropdownMenuLink" data-toggle="dropdown" href="/cate/subCate.do"
 	        	aria-haspopup="true" aria-expanded="false">
 	          	<i class="fas fa-tags"></i> 카테고리
 	        </a>
@@ -149,7 +146,7 @@
 	        </ul>
       	</li>
       	<li class="nav-item">
-			<a data-toggle="collapse" href="#left-joined-moim"
+			<a class="pl-5" data-toggle="collapse" href="#left-joined-moim"
 				role="button" aria-expanded="false" aria-controls="left-joined-moim">
 				<i class="fas fa-sign-in-alt"></i> 가입 모임 
 			</a>
@@ -177,7 +174,7 @@
 			</div>
       	  </li>
 	      <li class="nav-item">
-	      	<a data-toggle="collapse" href="#left-select-moim"
+	      	<a class="pl-5" data-toggle="collapse" href="#left-select-moim"
 			role="button" aria-expanded="false" aria-controls="collapseExample">
 			<i class="fas fa-heart"></i> 즐겨찾는 모임
 			</a>
@@ -205,7 +202,7 @@
 			</div>
 	      </li>
 	      <li class="nav-item">
-	      	<a data-toggle="collapse" href="#left-myfriends"
+	      	<a class="pl-5" data-toggle="collapse" href="#left-myfriends"
 			role="button" aria-expanded="false" aria-controls="collapseExample">
 			<i class="fas fa-users"></i> 팔로잉 
 			</a>
@@ -245,7 +242,10 @@
 					</c:choose>
 				</div>
 			</div>
-	      </li>      
+	      </li>   
+	      <li class="nav-item">
+			<a class="nav-link pl-5" href="/map/show.do"><i class="fas fa-map"></i> 지도</a>
+		  </li>   
 		</ul>
 		  
 		<!--  <a class="btn btn-primary" href="/moim/moim.do?moimNo=500000">

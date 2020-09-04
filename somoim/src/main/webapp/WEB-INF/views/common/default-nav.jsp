@@ -161,15 +161,15 @@
 			</form>
 		</div>
 		<!-- 공지 -->
-		<div class="nav-Notice">
+		<div class="nav-Notice" style="border: 1px dashed lightgray">
 		    <ul id="ticker">
 				<c:forEach items="${boardLists }" var="boardList" varStatus="listNo">
 					<li class="ml-1"><a href="#"><span>${listNo.count } . </span>${boardList.boardTitle}</a></li>
 				</c:forEach>
 		    </ul>
 		  <div class="nav-Notice-navi">
-		    <button class="btn btn-line-primary prev" style="top:50%">이전</button>
-		    <button class="btn btn-line-primary next">다음</button>
+		    <button class="btn btn-outline-dark prev" style="top:50%">이전</button>
+		    <button class="btn btn-outline-dark next">다음</button>
 		  </div>
 		</div> 
 		 

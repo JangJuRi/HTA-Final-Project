@@ -87,7 +87,7 @@ p {
 }
 </style>
 <div>
-	<div class="ml-5 mt-3">
+	<div class="ml-5 mt-5 mb-5">
 		<img src="/resources/profileImage/${LOGIN_USER.profileImage }"
 			class="rounded-circle myimage mr-3" alt="Cinque Terre"> <span
 			style="font-size: large; font-weight: bold;">${LOGIN_USER.nickname }</span>
@@ -111,7 +111,7 @@ p {
 			<div class='row'>
 				<div class='col-9'>
 					<div class='pb-4' style='border-bottom: 1px solid darkgray'>
-						<p>Profile</p>
+						<p style="color: darkgray">Profile</p>
 						<div class='mx-auto'>
 							<table class='table-borderless' style='width: 700px'>
 								<colgroup>
@@ -141,13 +141,13 @@ p {
 						</div>
 					</div>
 					<div class='mt-3 pb-4' style='border-bottom: 1px solid darkgray'>
-						<p>Comment</p>
+						<p style="color: darkgray">Comment</p>
 						<p>${fn:replace(LOGIN_USER.content,replaceCharRN,replaceCharBr)}</p>
 					</div>
 				</div>
 
 				<div class='col-3'>
-					<p>통계</p>
+					<p style="color: darkgray">[통계]</p>
 					<div class='mx-auto'>
 						<table class='table-borderless' style='width: 255px'>
 							<colgroup>
@@ -155,15 +155,15 @@ p {
 								<col width='50%'>
 							</colgroup>
 							<tr>
-								<th class='text-center'>가 입 일</th>
+								<th>가 입 일</th>
 								<td><fmt:formatDate value='${LOGIN_USER.createdDate}' /></td>
 							</tr>
 							<tr>
-								<th class='text-center'>팔로워 수</th>
+								<th>팔로워 수</th>
 								<td>${fn:length(followerMap.followers)}</td>
 							</tr>
 							<tr>
-								<th class='text-center'>팔로잉 수</th>
+								<th>팔로잉 수</th>
 								<td>${fn:length(followerMap.followings)}</td>
 							</tr>
 						</table>

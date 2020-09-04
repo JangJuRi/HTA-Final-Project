@@ -112,7 +112,7 @@ h5 {
 	<div class="col-12">
 		<h1 id="locationTitle"></h1>
 		<div id="locationMoim" class="row home-body"></div>
-		<button id="locationViewMore" class="btn text-center mb-3" style="width: 100%;background-color: lightgray; border-bottom: 1px solid gray; display: none;">더보기</button>
+		<button id="locationViewMore" class="btn btn btn-dark text-center mb-3" style="width: 100%; display: none;">더보기</button>
 		<hr/>
 	</div>
 </div>
@@ -120,7 +120,7 @@ h5 {
 	<div class="col-12">
 		<h1 id="mainCateTitle"></h1>
 		<div id="mainCateMoim" class="row home-body"></div>
-		<button id="mainCateViewMore" class="btn text-center mb-3" style="width: 100%;background-color: lightgray; border-bottom: 1px solid gray; display: none;">더보기</button>
+		<button id="mainCateViewMore" class="btn btn-dark text-center mb-3" style="width: 100%; display: none;">더보기</button>
 		<hr/>
 	</div>
 </div>

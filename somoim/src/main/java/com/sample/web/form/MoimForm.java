@@ -39,6 +39,8 @@ public class MoimForm {
 	
 	private long locationNo;
 	
+	private String locationDetail;
+	
 	private String userId;
 	
 	private MultipartFile upfile;
@@ -118,6 +120,13 @@ public class MoimForm {
 
 	public void setLocationNo(long locationNo) {
 		this.locationNo = locationNo;
+	}
+	
+	public String getLocationDetail() {
+		return locationDetail;
+	}
+	public void setLocationDetail(String locationDetail) {
+		this.locationDetail = locationDetail;
 	}
 
 	public String getPremiumYN() {

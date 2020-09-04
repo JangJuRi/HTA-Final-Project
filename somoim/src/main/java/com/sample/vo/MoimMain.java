@@ -18,6 +18,7 @@ public class MoimMain {
 	private Date createdDate;
 	private long subCateNo; 
 	private long locationNo;
+	private String locationDetail;
 
 	
 	public MoimMain () {}
@@ -111,6 +112,11 @@ public class MoimMain {
 	public void setLocationNo(long locationNo) {
 		this.locationNo = locationNo;
 	}
-	
+	public String getLocationDetail() {
+		return locationDetail;
+	}
+	public void setLocationDetail(String locationDetail) {
+		this.locationDetail = locationDetail;
+	}
 	
 }

@@ -112,7 +112,7 @@ public class MypageController {
 			filename = upfile.getOriginalFilename();
 			System.out.println(filename);
 			
-			File file = new File("C:\\final_project\\workspace\\somoim\\src\\main\\webapp\\resources\\profileImage\\"+filename);
+			File file = new File("C:\\final-project\\HTA_Final-Project\\somoim\\src\\main\\webapp\\resources\\profileImage\\"+filename);
 			FileOutputStream fos;
 			try {
 				file.createNewFile();

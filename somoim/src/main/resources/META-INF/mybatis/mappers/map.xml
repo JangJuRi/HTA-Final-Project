@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sample.dao.MapDao">
+	<select id="selectAllMoims" resultType="MainDto">
+		select
+			a.moim_no		as moimNo,
+			title			as title,
+            user_id         as userId,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			a.sub_cate_no	as subCateNo,
+            main_cate_no    as mainCateNo,
+			location_no		as locationNo,
+            location_detail as locationDetail
+		from
+			moim_main A, moim_join_user B, moim_sub_cate C
+        where
+            b.user_role = 'ADMIN'
+        and
+            a.moim_no = b.moim_no
+        and
+            a.sub_cate_no = c.sub_cate_no
+        and
+            delete_yn = 'N'
+		order by
+			a.moim_no desc
+	</select>
+	
+	<select id="selectMoimsByLocation" parameterType="long" resultType="MainDto">
+		select
+			a.moim_no		as moimNo,
+			title			as title,
+            user_id         as userId,
+			join_count		as joinCount,
+			head_count		as headCount,
+			content			as content,
+			image			as image,
+			fee				as fee,
+			likes			as likes,
+			premium_yn		as premiumYn,
+			delete_yn		as deleteYn,
+			join_date		as joinDate,
+			a.created_date	as createdDate,
+			a.sub_cate_no	as subCateNo,
+            main_cate_no    as mainCateNo,
+			location_no		as locationNo,
+            location_detail as locationDetail
+		from
+			moim_main A, moim_join_user B, moim_sub_cate C
+        where
+            b.user_role = 'ADMIN'
+        and
+            a.moim_no = b.moim_no
+        and
+            a.sub_cate_no = c.sub_cate_no
+        and
+            delete_yn = 'N'
+        and
+            location_no = #{value}
+		order by
+			a.moim_no desc
+	</select>
+</mapper>
