@@ -34,7 +34,7 @@
 			a.moim_no desc
 	</select>
 	
-	<select id="selectMoimsByLocation" parameterType="long" resultType="MainDto">
+	<select id="selectMoimsByCategory" parameterType="long" resultType="MainDto">
 		select
 			a.moim_no		as moimNo,
 			title			as title,
@@ -64,7 +64,7 @@
         and
             delete_yn = 'N'
         and
-            location_no = #{value}
+            main_cate_no = #{value}
 		order by
 			a.moim_no desc
 	</select>

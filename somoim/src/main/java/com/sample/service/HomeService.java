@@ -30,7 +30,7 @@ public interface HomeService {
 	List<MoimFollowDto> getfollowUsers(String userId);
 	
 	// 좋아요 기능 구현
-	void increaseLikesMoim(long moimNo, String userId);
+	boolean increaseLikesMoim(long moimNo, String userId);
 	
 	// 좋아요 유무 확인
 	MoimFavoriteMoim getFavorite(long moimNo, String userId);

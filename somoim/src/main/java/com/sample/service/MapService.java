@@ -7,5 +7,5 @@ import com.sample.dto.MoimMainDto;
 public interface MapService {
 
 	List<MoimMainDto> getAllMoims();
-	List<MoimMainDto> getMoimsByLocation(long locationNo);
+	List<MoimMainDto> getMoimsByCategory(long mainCateNo);
 }

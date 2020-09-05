@@ -88,11 +88,11 @@ public class HomeServiceImpl implements HomeService{
 
 	// 좋아요 기능 구현
 	@Override
-	public void increaseLikesMoim(long moimNo, String userId) {
+	public boolean increaseLikesMoim(long moimNo, String userId) {
 		MoimMainDto savedMoim = moimDao.selectMoim(moimNo);
 		if(savedMoim == null) {
 			System.out.println("해당 게시글이 존재하지 않음");
-			return;
+			return false;
 		}
 		
 		// 유저 즐겨찾기모임 추가
@@ -104,13 +104,15 @@ public class HomeServiceImpl implements HomeService{
 		
 		if(moimFavoriteMoim != null) {
 			homeDao.deleteLikesMoim(moimFavoriteMoim);
-		savedMoim.setLikes(savedMoim.getLikes() - 1);
-		}else {
-			homeDao.addLikesMoim(favoriteMoim);
-			savedMoim.setLikes(savedMoim.getLikes() + 1);
-			
+			savedMoim.setLikes(savedMoim.getLikes() - 1);
+			moimDao.updateMoim(savedMoim);
+			return false;
 		}
+		homeDao.addLikesMoim(favoriteMoim);
+		savedMoim.setLikes(savedMoim.getLikes() + 1);
+		
 		moimDao.updateMoim(savedMoim);
+		return true;
 	}
 
 	@Override

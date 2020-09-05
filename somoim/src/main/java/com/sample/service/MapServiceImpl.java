@@ -22,8 +22,8 @@ public class MapServiceImpl implements MapService {
 	}
 
 	@Override
-	public List<MoimMainDto> getMoimsByLocation(long locationNo) {
-		return mapDao.selectMoimsByLocation(locationNo);
+	public List<MoimMainDto> getMoimsByCategory(long mainCateNo) {
+		return mapDao.selectMoimsByCategory(mainCateNo);
 	}
 	
 	
