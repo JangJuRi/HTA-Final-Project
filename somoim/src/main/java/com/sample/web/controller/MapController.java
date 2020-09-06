@@ -39,7 +39,7 @@ public class MapController {
 		return mapService.getAllMoims();
 	}
 	
-	@GetMapping("location.do")
+	@GetMapping("category.do")
 	@ResponseBody
 	public List<MoimMainDto> location(@RequestParam("mainCateNo") long mainCateNo) {
 		return mapService.getMoimsByCategory(mainCateNo);

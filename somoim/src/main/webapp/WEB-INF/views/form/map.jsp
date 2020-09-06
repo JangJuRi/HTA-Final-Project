@@ -1,12 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<div id="map" style="width:100%;height:100%;">
+    
+<style>
+#mapwrap {
+	width: 100%;
+	height: 100%;
+	position:relative;
+	overflow:hidden;
+	margin-left: -15px;
+	margin-right: -15px;
+}
 
+#category-select-div {
+	width: 130px;
+	height: 100%;
+	background-color: rgba(0,0,0,0.7);
+	top: 10;
+	left: 10;
+	z-index: 5;
+	position: absolute;
+	overflow: hidden;
+}
+#category-select-div ul li{
+	padding: 10px;
+}
+#category-select-div ul li img{
+	opacity: 120%;
+	cursor: pointer;
+}
+
+#map {
+	width: 100%;
+	height: 100%;
+}
+</style>   
+ <div id="mapwrap"> 
+	<!-- 카테고리 선택 -->
+	<div id="category-select-div">
+		<ul class="nav flex-column text-center">
+			<li class="nav-item">
+				<img src="/resources/map/game.png" class="rounded-circle z-depth-0"
+								alt="게임/오락" height="60" data-toggle="tooltip" data-placement="right" title="게임/오락">
+			</li>
+			<li class="nav-item">
+				<img src="/resources/map/social.png" class="rounded-circle z-depth-0"
+								alt="사교/인맥" height="60" data-toggle="tooltip" data-placement="right" title="사교/인맥">
+			</li>
+			<li class="nav-item">
+				<img src="/resources/map/sports.png" class="rounded-circle z-depth-0"
+								alt="운동/스포츠" height="60" data-toggle="tooltip" data-placement="right" title="운동/스포츠">
+			</li>
+			<li class="nav-item">
+				<img src="/resources/map/pet.png" class="rounded-circle z-depth-0"
+								alt="반려동물" height="60" data-toggle="tooltip" data-placement="right" title="반려동물">
+			</li>
+			<li class="nav-item">
+				<img src="/resources/map/festival.png" class="rounded-circle z-depth-0"
+								alt="문화/공연/축제" height="60" data-toggle="tooltip" data-placement="right" title="문화/공연/축제">
+			</li>
+		</ul>
+	</div>
+	<!-- 카테고리 선택 끝 -->
+	    
+	<!-- 지도 화면에 뿌리기 -->    
+	<div id="map"></div>
+	<!-- 지도 끝 -->  
 </div>
-
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fd8bf3bdcf042904f91fab5e8d922409&libraries=services"></script>
 <script>
 $(function() {
+	$('[data-toggle="tooltip"]').tooltip();
+	
+	
 	// 화면에 지도 띄우기
 	var container = document.getElementById('map');
 	var options = {
@@ -14,8 +79,9 @@ $(function() {
 		level : 8
 	};
 	var map = new kakao.maps.Map(container, options);
+	var markers = [];
 	
-	
+	// 전체 모임 조회하기
 	$.ajax({
 		type:"GET",
 		url:"/map/all.do",
@@ -27,8 +93,49 @@ $(function() {
 		}
 	})
 	
+	// 카테고리별 모임 조회하기
+	function cateMoims(cateNo) {
+		$.ajax({
+			type:"GET",
+			url:"/map/category.do",
+			data: {mainCateNo: cateNo},
+			dataType:"json",
+			success:function(moims) {
+				$.each(moims, function (index, moim) {
+					showMarker(moim);
+				});
+			}
+		})
+	}
+	$("#category-select-div ul li:eq(0) img").click(function() {
+		setMarkers(null);
+		cateMoims(1);
+	})
+	$("#category-select-div ul li:eq(1) img").click(function() {
+		setMarkers(null);
+		cateMoims(2);
+	})
+	$("#category-select-div ul li:eq(2) img").click(function() {
+		setMarkers(null);
+		cateMoims(3);
+	})
+	$("#category-select-div ul li:eq(3) img").click(function() {
+		setMarkers(null);
+		cateMoims(4);
+	})
+	$("#category-select-div ul li:eq(4) img").click(function() {
+		setMarkers(null);
+		cateMoims(5);
+	})
 	
-	// 지도에 마커 띄우기
+	// 마커 셋팅하기(마커 지우기용)
+	function setMarkers(map) {
+		for (var i = 0; i < markers.length; i++) {
+	        markers[i].setMap(map);
+	    }
+	}
+	
+	// 마커 설정하기
 	function showMarker(moim) {
 		var geocoder = new kakao.maps.services.Geocoder();
 		geocoder.addressSearch(moim.locationDetail, function(result, status) {
@@ -41,6 +148,8 @@ $(function() {
 		        	clickable: true
 		        });
 		        marker.setMap(map);
+		        
+		        markers.push(marker);
 		        
 		        // 마커 이미지
 		        var markerImage = new kakao.maps.MarkerImage(
