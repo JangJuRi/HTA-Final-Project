@@ -205,7 +205,7 @@ $(function() {
         			if (status === kakao.maps.services.Status.OK) {
         				var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
         				// 해당 좌표로 지도 위치 이동
-        				map.setLevel(1);
+        				map.setLevel(3);
         				map.panTo(coords);
         				
         				// 해당 위치에 마커 생성

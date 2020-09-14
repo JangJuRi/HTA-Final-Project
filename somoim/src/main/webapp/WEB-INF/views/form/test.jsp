@@ -37,7 +37,6 @@
 	        <div class="mb-1">
 	          <span class="mr-3"><c:out value="${moim.userId }"></c:out> </span>
 	          <span><i class="fas fa-heart" style="color: #d09afc"></i><fmt:formatNumber value="${moim.likes }"/> </span>
-	          <p>지역 : ${moim.locationName } &ensp;카테고리 : ${moim.subCateName }</p>
 	        </div>
 	        <div class="mb-2">
 	          <span class="mr-3"><i class="fas fa-won-sign"></i> <fmt:formatNumber value="${moim.fee }"/> 원</span>
@@ -47,11 +46,11 @@
 	      </div>
 	    </div>
 	  </div>
-	  <div class="col-3" style="padding:">
+	  <div class="col-3">
 	    <div class="text-center">내 친구</div>
 	    <c:forEach items="${moim.friends }" var="friend">
 	    <div class="mb-3">
-	      <a href="#"><img src="/resources/home_images/3.png" class="rounded-circle smallimage mr-3" alt="Cinque Terre">
+	      <a href="#"><img src="/resources/profileImage/${friend.profileImage }" class="rounded-circle smallimage mr-3" alt="Cinque Terre">
 	        <span style="font-size: 15px; font-weight: bold;"><c:out value="${friend.nickname }"/></span></a>
 	    </div>
 	    </c:forEach>

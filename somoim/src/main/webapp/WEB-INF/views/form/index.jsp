@@ -44,16 +44,6 @@
 						Signup</button>
 					</form:form>
 				</div>
-				<div class="" style="padding: 10px 10px;">
-					<div class="mb-2">
-						<span><img src="/resources/index_images/kakao_login_medium_narrow.png" alt="" width="40%"></span>
-						<span><img src="/resources/index_images/kakao_login_medium_narrow.png" alt="" width="40%"></span>
-					</div>
-					<div class="">
-						<span><img src="/resources/index_images/네이버 아이디로 로그인_완성형_Green.PNG" alt="" width="40%"></span> <span><img
-								src="/resources//index_images/네이버 아이디로 로그인_완성형_Green.PNG" alt="" width="40%"></span>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
