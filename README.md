@@ -30,5 +30,5 @@
 ---
 ### 세부 기능
 <p align="center"> 
-  <img src = "/캡쳐/배라-포인트.png" width="40%">
+  <img src = "/캡쳐/홈.png" width="40%">
 </p>
